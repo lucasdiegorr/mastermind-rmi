@@ -1,10 +1,8 @@
 package com.ldrr.server.custom;
 
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -27,6 +25,7 @@ import com.ldrr.server.generic.MessageChat;
  */
 public class ServerChat extends UnicastRemoteObject implements Runnable, ServerChatInterface {
 
+	private static final long serialVersionUID = 1L;
 	private List<ClientChatInterface> listClient;
 
 	public ServerChat() throws RemoteException{

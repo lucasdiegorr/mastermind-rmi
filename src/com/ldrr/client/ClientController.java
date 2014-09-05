@@ -2,15 +2,11 @@ package com.ldrr.client;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 import com.ldrr.client.custom.ClientChat;
-import com.ldrr.client.custom.ClientChatInterface;
 import com.ldrr.client.custom.ClientGame;
 import com.ldrr.graphic.GameFrame;
 import com.ldrr.server.generic.Commands;
@@ -53,9 +49,9 @@ public class ClientController {
 		try {
 			LocateRegistry.createRegistry(5500);
 			this.clientChat = new ClientChat(address, port, this);
-			Naming.rebind("rmi://127.0.0.1:5500/Challenger", this.clientChat);
+			Naming.rebind("rmi://"+address+":5500/Challenger", this.clientChat);
 			System.out.println("Registrado o challeger");
-			this.clientChat.getOtherClient().searchEnemy();
+			this.clientChat.getOtherClient().searchEnemy(address);
 			new Thread(clientChat).start();
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -69,10 +65,10 @@ public class ClientController {
 			LocateRegistry.createRegistry(5500);
 			this.clientChat = new ClientChat(address, port, this);
 			this.clientChat.setClientName(nickName);
-			Naming.rebind("rmi://127.0.0.1:5500/Challenger", this.clientChat);
+			Naming.rebind("rmi://"+address+":5500/Challenger", this.clientChat);
 			System.out.println("Registrado o challeger");
 			new Thread(clientChat).start();
-			this.clientChat.getOtherClient().searchEnemy();
+			this.clientChat.getOtherClient().searchEnemy(address);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		} catch (MalformedURLException e) {

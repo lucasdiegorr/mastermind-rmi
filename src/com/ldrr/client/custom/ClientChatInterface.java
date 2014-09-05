@@ -3,7 +3,6 @@ package com.ldrr.client.custom;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import com.ldrr.client.ClientController;
 
 public interface ClientChatInterface extends Remote{
 
@@ -41,8 +40,6 @@ public interface ClientChatInterface extends Remote{
 	 * @return the emoticon
 	 */
 	public int getEmoticon() throws RemoteException;
-	
-	public ClientController getController() throws RemoteException;
-	
-	public void searchEnemy() throws RemoteException;
+		
+	public void searchEnemy(String address) throws RemoteException;
 }

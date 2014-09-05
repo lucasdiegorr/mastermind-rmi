@@ -868,7 +868,7 @@ public class GameFrame {
 		getBtnReconnect().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				getClientController().initChat(getTextFieldAddressGame().getText(), Integer.parseInt(getTextFieldRoomGame().getText())-1000, getTextFieldNickName().getText());
+				getClientController().initChat(getTextFieldAddressGame().getText(), Integer.parseInt(getTextFieldRoomGame().getText())-1000);
 				getPanelMyAvatar().setBorder(new TitledBorder(null, getClientController().getNickName(), TitledBorder.CENTER, TitledBorder.BOTTOM, null, null));
 				getBtnReconnect().setEnabled(false);
 				getBtnReconnect().setVisible(false);
