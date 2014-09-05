@@ -66,12 +66,11 @@ public class ClientChat extends UnicastRemoteObject implements Runnable, ClientC
 	public void searchEnemy(String address) {
 		try {
 			setOtherClient((ClientChatInterface)Naming.lookup("rmi://"+address+":5500/Challenger"));
-			System.out.println("Challeger encontrado.");
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -123,7 +122,18 @@ public class ClientChat extends UnicastRemoteObject implements Runnable, ClientC
 		}
 	}
 
+	public void sendAlertDisconnect() {
+		MessageChat message = new MessageChat("Anônimo", 8, "O outro usuário saiu.");
+		ByteArrayOutputStream byteArrayOutput = new ByteArrayOutputStream();
 
+		try {
+			new ObjectOutputStream(byteArrayOutput).writeObject(message);
+			getOtherClient().receivedMessageChat(Base64.encodeBase64String(byteArrayOutput.toByteArray()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.ldrr.client.custom.ClientChatInterface#setClientName(java.lang.String)
 	 */

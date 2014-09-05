@@ -26,6 +26,7 @@ public class ClientController {
 	private ClientChat clientChat;
 	private ClientGame clientGame;
 	private GameFrame gameFrame;
+	private boolean connectedChat;
 
 	public ClientController(GameFrame chatFrame) {
 		this.gameFrame = chatFrame;
@@ -36,23 +37,8 @@ public class ClientController {
 			LocateRegistry.createRegistry(5000);
 			this.clientChat = new ClientChat(this);
 			Naming.rebind("rmi://127.0.0.1:5000/Master", this.clientChat);
-			System.out.println("Registrado o master");
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		new Thread(clientChat).start();
-	}
-
-	public void initChat(String address, int port) {
-		try {
-			LocateRegistry.createRegistry(5500);
-			this.clientChat = new ClientChat(address, port, this);
-			Naming.rebind("rmi://"+address+":5500/Challenger", this.clientChat);
-			System.out.println("Registrado o challeger");
-			this.clientChat.getOtherClient().searchEnemy(address);
 			new Thread(clientChat).start();
+			this.setConnectedChat(true);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		} catch (MalformedURLException e) {
@@ -60,21 +46,21 @@ public class ClientController {
 		}
 	}
 
-	public void initChat(String address, int port, String nickName) {
+	public void initChat(String address, int port) {
 		try {
 			LocateRegistry.createRegistry(5500);
 			this.clientChat = new ClientChat(address, port, this);
-			this.clientChat.setClientName(nickName);
-			Naming.rebind("rmi://"+address+":5500/Challenger", this.clientChat);
-			System.out.println("Registrado o challeger");
+			Naming.rebind("rmi://127.0.0.1:5500/Challenger", this.clientChat);
+			this.clientChat.getOtherClient().searchEnemy(this.clientChat.getAddress());
 			new Thread(clientChat).start();
-			this.clientChat.getOtherClient().searchEnemy(address);
+			this.setConnectedChat(true);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
 	}
+
 	public void initGame() {
 		this.clientGame = new ClientGame(this);
 		new Thread(clientGame).start();
@@ -94,7 +80,9 @@ public class ClientController {
 	}
 
 	public void receivedMessageChat(String message) {
-		this.gameFrame.setMessageToTextAreaChat(message);
+		if (isConnectedChat()) {
+			this.gameFrame.setMessageToTextAreaChat(message);
+		}
 	}
 
 	public void receivedSequenceGame(int[] colorResponse) {
@@ -110,13 +98,12 @@ public class ClientController {
 	}
 
 	public void disconnectFromChat() {
-		//		try {
-		//			this.clientChat.getReader().close();
-		//			this.clientChat.getWriter().close();
-		//			this.clientChat.getSocket().close();
-		//		} catch (IOException e) {
-		//			e.printStackTrace();
-		//		}
+		this.clientChat.sendAlertDisconnect();
+		this.setConnectedChat(false);
+	}
+
+	public void reconnectChat() {
+		this.setConnectedChat(true);
 	}
 
 	public void disconnectFromGame() {
@@ -165,4 +152,19 @@ public class ClientController {
 	public boolean isConnect() {
 		return ((this.clientChat != null) && (this.clientGame != null))?true:false;
 	}
+
+	/**
+	 * @return the connectedChat
+	 */
+	public boolean isConnectedChat() {
+		return connectedChat;
+	}
+
+	/**
+	 * @param connectedChat the connectedChat to set
+	 */
+	public void setConnectedChat(boolean connectedChat) {
+		this.connectedChat = connectedChat;
+	}
+
 }

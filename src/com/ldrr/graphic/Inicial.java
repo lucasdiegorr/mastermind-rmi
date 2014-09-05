@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.Color;
+import java.io.IOException;
 
 /**
  * All source code and required libraries are found at the following link:
@@ -35,6 +36,11 @@ public class Inicial {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+			Runtime.getRuntime().exec("rmiregistry");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}  
 		try {
 			UIManager.setLookAndFeel(ch.randelshofer.quaqua.QuaquaManager
 					.getLookAndFeelClassName());
@@ -108,11 +114,11 @@ public class Inicial {
 					@Override
 					public void run() {
 						try {
-							
+
 							//ServerChat chat = new ServerChat();
 							ServerGame game = new ServerGame();
-//							Naming.rebind("//127.0.0.1:5000/Chat", chat);
-//							new Thread(chat).start();
+							//							Naming.rebind("//127.0.0.1:5000/Chat", chat);
+							//							new Thread(chat).start();
 							new Thread(game).start();
 							new GameFrame(false);
 							frame.setVisible(false);
@@ -133,7 +139,7 @@ public class Inicial {
 		lblQuemGostariaDe.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		lblQuemGostariaDe.setBounds(187, 81, 169, 24);
 		frame.getContentPane().add(lblQuemGostariaDe);
-		
+
 		JLabel label = new JLabel();
 		label.setBounds(0, 0, 545, 210);
 		label.setIcon(new ImageIcon(getClass().getResource("/gif-balls.gif")));
