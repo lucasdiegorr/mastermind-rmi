@@ -1,6 +1,11 @@
 package com.ldrr.client.custom;
 
-public interface ClientChatInterface {
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+import com.ldrr.client.ClientController;
+
+public interface ClientChatInterface extends Remote{
 
 	/**
 	 * Treatment makes the messages received by the server
@@ -8,33 +13,36 @@ public interface ClientChatInterface {
 	 * @param messageFromServer - message received by the server 
 	 * - mensagem recebida pelo servidor
 	 */
-	public void receivedMessageChat(String messageFromServer);
+	public void receivedMessageChat(String messageFromServer) throws RemoteException;
 
 	/**
 	 * Send a message to the server
 	 * Envia uma mensagem ao servidor
 	 * @param stringMessage - message to be sent - mensagem a ser enviada
 	 */
-	public void sendMessageChat(String stringMessage);
+	public void sendMessageChat(String stringMessage) throws RemoteException;
 
 	/**
 	 * @param clientName the clientName to set
 	 */
-	public void setClientName(String clientName);
+	public void setClientName(String clientName) throws RemoteException;
 
 	/**
 	 * @return the clientName
 	 */
-	public String getClientName();
+	public String getClientName() throws RemoteException;
 
 	/**
 	 * @param emoticon the emoticon to set
 	 */
-	public void setEmoticon(int emoticon);
+	public void setEmoticon(int emoticon) throws RemoteException;
 
 	/**
 	 * @return the emoticon
 	 */
-	public int getEmoticon();
-
+	public int getEmoticon() throws RemoteException;
+	
+	public ClientController getController() throws RemoteException;
+	
+	public void searchEnemy() throws RemoteException;
 }

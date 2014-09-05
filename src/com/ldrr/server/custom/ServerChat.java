@@ -14,7 +14,6 @@ import org.apache.commons.codec.binary.Base64;
 
 import com.ldrr.client.custom.ClientChatInterface;
 import com.ldrr.server.generic.MessageChat;
-import com.ldrr.server.generic.Server;
 
 /**
  * All source code and required libraries are found at the following link:
@@ -80,7 +79,11 @@ public class ServerChat extends UnicastRemoteObject implements Runnable, ServerC
 	public void sendMessage(String messageToAll) {
 		System.out.println("Fui chamado.");
 		for (ClientChatInterface othreClient : getListClient()) {
-				othreClient.receivedMessageChat(messageToAll);
+				try {
+					othreClient.receivedMessageChat(messageToAll);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
 		}
 	}
 
@@ -91,7 +94,11 @@ public class ServerChat extends UnicastRemoteObject implements Runnable, ServerC
 	 * */
 	public void sendAlert(String ALERT) {
 		for (ClientChatInterface clients : getListClient()) {
-			clients.receivedMessageChat(ALERT);
+			try {
+				clients.receivedMessageChat(ALERT);
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
