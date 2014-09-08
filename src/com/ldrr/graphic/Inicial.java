@@ -115,11 +115,8 @@ public class Inicial {
 					public void run() {
 						try {
 
-							//ServerChat chat = new ServerChat();
-							ServerGame game = new ServerGame();
-							//							Naming.rebind("//127.0.0.1:5000/Chat", chat);
-							//							new Thread(chat).start();
-							new Thread(game).start();
+//							ServerGame game = new ServerGame();
+//							new Thread(game).start();
 							new GameFrame(false);
 							frame.setVisible(false);
 						} catch (Exception e) {

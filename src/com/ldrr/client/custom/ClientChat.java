@@ -30,6 +30,7 @@ import com.ldrr.server.generic.MessageChat;
  */
 public class ClientChat extends UnicastRemoteObject implements Runnable, ClientChatInterface {
 
+	private static final long serialVersionUID = 1L;
 	private String clientName = null;
 	private int emoticon;
 	private ClientController controller;
@@ -45,8 +46,7 @@ public class ClientChat extends UnicastRemoteObject implements Runnable, ClientC
 			this.setClientName(nickname);
 			this.setController(controller);
 			this.setEmoticon(0);
-			setOtherClient((ClientChatInterface)Naming.lookup("rmi://"+address+":"+port+"/Master"));
-			System.out.println("Encontrado o master.");
+			setOtherClient((ClientChatInterface)Naming.lookup("rmi://"+address+":"+port+"/MasterChat"));
 		} catch (MalformedURLException | NotBoundException e) {
 			e.printStackTrace();
 		}
@@ -56,8 +56,7 @@ public class ClientChat extends UnicastRemoteObject implements Runnable, ClientC
 		try {
 			this.setController(controller);
 			this.setEmoticon(0);
-			setOtherClient((ClientChatInterface)Naming.lookup("rmi://"+address+":"+port+"/Master"));
-			System.out.println("Encontrado o master.");
+			setOtherClient((ClientChatInterface)Naming.lookup("rmi://"+address+":"+port+"/MasterChat"));
 		} catch (MalformedURLException | NotBoundException e) {
 			e.printStackTrace();
 		}
@@ -65,7 +64,7 @@ public class ClientChat extends UnicastRemoteObject implements Runnable, ClientC
 
 	public void searchEnemy(String address) {
 		try {
-			setOtherClient((ClientChatInterface)Naming.lookup("rmi://"+address+":5500/Challenger"));
+			setOtherClient((ClientChatInterface)Naming.lookup("rmi://"+address+":5500/ChallengerChat"));
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			e.printStackTrace();
 		}

@@ -121,7 +121,7 @@ public class GameFrame {
 			getTextFieldRoomGame().setEditable(false);
 			getTextFieldRoomGame().setEnabled(false);
 			getTextFieldAddressGame().setText(getClientController().addressGame());
-			getTextFieldRoomGame().setText(""+getClientController().portGame());
+			getTextFieldRoomGame().setText("6000");
 		}
 	}
 

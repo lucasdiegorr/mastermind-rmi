@@ -1,6 +1,5 @@
 package com.ldrr.client;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -36,7 +35,7 @@ public class ClientController {
 		try {
 			LocateRegistry.createRegistry(5000);
 			this.clientChat = new ClientChat(this);
-			Naming.rebind("rmi://127.0.0.1:5000/Master", this.clientChat);
+			Naming.rebind("rmi://127.0.0.1:5000/MasterChat", this.clientChat);
 			new Thread(clientChat).start();
 			this.setConnectedChat(true);
 		} catch (RemoteException e) {
@@ -50,7 +49,7 @@ public class ClientController {
 		try {
 			LocateRegistry.createRegistry(5500);
 			this.clientChat = new ClientChat(address, port, this);
-			Naming.rebind("rmi://127.0.0.1:5500/Challenger", this.clientChat);
+			Naming.rebind("rmi://127.0.0.1:5500/ChallengerChat", this.clientChat);
 			this.clientChat.getOtherClient().searchEnemy(this.clientChat.getAddress());
 			new Thread(clientChat).start();
 			this.setConnectedChat(true);
@@ -62,13 +61,32 @@ public class ClientController {
 	}
 
 	public void initGame() {
-		this.clientGame = new ClientGame(this);
-		new Thread(clientGame).start();
+		try {
+			LocateRegistry.createRegistry(6000);
+			this.clientGame = new ClientGame(this);
+			Naming.rebind("rmi://127.0.0.1:6000/MasterGame", this.clientGame);
+			new Thread(clientGame).start();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void initGame(String address, int port) {
-		this.clientGame = new ClientGame(address, port, this);
-		new Thread(clientGame).start();
+		try {
+			LocateRegistry.createRegistry(6500);
+			this.clientGame = new ClientGame(address, port, this);
+			Naming.rebind("rmi://127.0.0.1:6500/ChallengerGame", this.clientGame);
+			System.out.println("Registrado o challenger");
+			this.clientGame.getOtherClient().searchEnemy(this.clientGame.getAddress());
+			new Thread(clientGame).start();
+			alert(Commands.INIT_GAME);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void sendMessageChat(String message) {
@@ -107,22 +125,15 @@ public class ClientController {
 	}
 
 	public void disconnectFromGame() {
-		try {
-			this.clientGame.sendMessage(Commands.DISCONNECT.toString());
-			this.clientGame.getReader().close();
-			this.clientGame.getWriter().close();
-			this.clientGame.getSocket().close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.clientGame.sendAlert(Commands.DISCONNECT);
 	}
 
-	public void Alert(Commands command) {
+	public void alert(Commands command) {
 		this.gameFrame.Alert(command);
 	}
 
 	public void resetGame() {
-		this.clientGame.sendMessage(Commands.RESET_GAME.toString());
+		this.clientGame.sendAlert(Commands.RESET_GAME);
 	}
 
 	public void setEmoticon(int emoticon) {
@@ -143,10 +154,6 @@ public class ClientController {
 
 	public String addressGame() {
 		return this.clientChat.getAddress();
-	}
-
-	public int portGame() {
-		return this.clientGame.getPort();
 	}
 
 	public boolean isConnect() {
