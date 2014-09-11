@@ -15,7 +15,7 @@ public interface ClientGameInterface extends Remote{
 	 */
 	public void sendSequence(int[] sequence) throws RemoteException;
 
-	public void searchEnemy(String address) throws RemoteException;
+	public void searchEnemy(String address, String enemy) throws RemoteException;
 
 	public void receivedAlert(Commands alert) throws RemoteException;
 

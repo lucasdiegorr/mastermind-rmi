@@ -90,7 +90,6 @@ public class GameFrame {
 	private JTextArea textAreaChat;
 	private JTextArea textToSend;
 	private JTextField textFieldAddressGame;
-	private JTextField textFieldRoomGame;
 	private JTextField textFieldNickName;
 
 	/**
@@ -117,11 +116,7 @@ public class GameFrame {
 			this.getClientController().initGame();
 			this.getClientController().initChat();
 			getTextFieldAddressGame().setEditable(false);
-			getTextFieldAddressGame().setEnabled(false);
-			getTextFieldRoomGame().setEditable(false);
-			getTextFieldRoomGame().setEnabled(false);
 			getTextFieldAddressGame().setText(getClientController().addressGame());
-			getTextFieldRoomGame().setText("6000");
 		}
 	}
 
@@ -138,7 +133,7 @@ public class GameFrame {
 
 		setPanelGameAddress(new JPanel());
 		getPanelGameAddress().setBorder(new TitledBorder(null, "Informa\u00E7\u00F5es do Game Server", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(128, 0, 0)));
-		getPanelGameAddress().setBounds(134, 185, 250, 300);
+		getPanelGameAddress().setBounds(134, 185, 250, 224);
 		getFrmMastermindGame().getContentPane().add(getPanelGameAddress());
 		getPanelGameAddress().setLayout(null);
 
@@ -153,25 +148,14 @@ public class GameFrame {
 		getPanelGameAddress().add(getTextFieldAddressGame());
 		getTextFieldAddressGame().setColumns(10);
 
-		JLabel lblRoomGame = new JLabel("Sala:");
-		lblRoomGame.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 18));
-		lblRoomGame.setForeground(Color.RED);
-		lblRoomGame.setBounds(100, 99, 49, 30);
-		getPanelGameAddress().add(lblRoomGame);
-
-		setTextFieldRoomGame(new JTextField());
-		getTextFieldRoomGame().setBounds(62, 129, 124, 31);
-		getPanelGameAddress().add(getTextFieldRoomGame());
-		getTextFieldRoomGame().setColumns(10);
-
 		JLabel lblNickName = new JLabel("Qual seu NickName?");
 		lblNickName.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 18));
 		lblNickName.setForeground(Color.RED);
-		lblNickName.setBounds(32, 171, 185, 30);
+		lblNickName.setBounds(32, 106, 185, 30);
 		getPanelGameAddress().add(lblNickName);
 
 		setTextFieldNickName(new JTextField());
-		getTextFieldNickName().setBounds(62, 206, 124, 31);
+		getTextFieldNickName().setBounds(62, 141, 124, 31);
 		getPanelGameAddress().add(getTextFieldNickName());
 		getTextFieldNickName().setColumns(10);
 
@@ -182,18 +166,8 @@ public class GameFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				String address = getTextFieldAddressGame().getText();
 				if (isChallenging()) {
-					int port;
-					try {
-						port = Integer.parseInt(getTextFieldRoomGame()
-								.getText());
-					} catch (NumberFormatException e) {
-						JOptionPane
-						.showMessageDialog(null,
-								"Por favor insira um valor válido como sala para podemos começar o jogo.");
-						return;
-					}
-					getClientController().initGame(address, port);
-					getClientController().initChat(address, port - 1000);
+					getClientController().initGame(address);
+					getClientController().initChat(address);
 				}
 				String nickName = getTextFieldNickName().getText();
 				if (nickName.isEmpty()) {
@@ -208,12 +182,12 @@ public class GameFrame {
 				getBtnDisconnect().setEnabled(true);
 			}
 		});
-		btnInitGame.setBounds(69, 248, 109, 29);
+		btnInitGame.setBounds(69, 183, 109, 29);
 		getPanelGameAddress().add(btnInitGame);
 
 		JLabel lblBack = new JLabel();
 		lblBack.setForeground(Color.BLACK);
-		lblBack.setBounds(0, 20, 245, 275);
+		lblBack.setBounds(0, 20, 245, 201);
 		lblBack.setIcon(this.getSprite().getImage());
 		getPanelGameAddress().add(lblBack);
 
@@ -1116,6 +1090,8 @@ public class GameFrame {
 						resetGame();
 						return;
 					}
+					getClientController().disconnectFromChat();
+					getClientController().disconnectFromGame();
 					System.exit(0);
 				}
 				return;
@@ -1938,20 +1914,6 @@ public class GameFrame {
 	 */
 	private void setTextFieldNickName(JTextField textFieldNickName) {
 		this.textFieldNickName = textFieldNickName;
-	}
-
-	/**
-	 * @return the textFieldRoomGame
-	 */
-	private JTextField getTextFieldRoomGame() {
-		return textFieldRoomGame;
-	}
-
-	/**
-	 * @param textFieldRoomGame the textFieldRoomGame to set
-	 */
-	private void setTextFieldRoomGame(JTextField textFieldRoomGame) {
-		this.textFieldRoomGame = textFieldRoomGame;
 	}
 
 	/**

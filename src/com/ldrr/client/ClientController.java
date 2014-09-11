@@ -3,7 +3,6 @@ package com.ldrr.client;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 
 import com.ldrr.client.custom.ClientChat;
 import com.ldrr.client.custom.ClientGame;
@@ -33,7 +32,6 @@ public class ClientController {
 
 	public void initChat() {
 		try {
-			LocateRegistry.createRegistry(5000);
 			this.clientChat = new ClientChat(this);
 			Naming.rebind("rmi://127.0.0.1:5000/MasterChat", this.clientChat);
 			new Thread(clientChat).start();
@@ -45,12 +43,11 @@ public class ClientController {
 		}
 	}
 
-	public void initChat(String address, int port) {
+	public void initChat(String address) {
 		try {
-			LocateRegistry.createRegistry(5500);
-			this.clientChat = new ClientChat(address, port, this);
-			Naming.rebind("rmi://127.0.0.1:5500/ChallengerChat", this.clientChat);
-			this.clientChat.getOtherClient().searchEnemy(this.clientChat.getAddress());
+			this.clientChat = new ClientChat(address, this);
+			Naming.rebind("rmi://"+address+":5000/ChallengerChat", this.clientChat);
+			this.clientChat.getOtherClient().searchEnemy(address, "ChallengerChat");
 			new Thread(clientChat).start();
 			this.setConnectedChat(true);
 		} catch (RemoteException e) {
@@ -62,9 +59,8 @@ public class ClientController {
 
 	public void initGame() {
 		try {
-			LocateRegistry.createRegistry(6000);
 			this.clientGame = new ClientGame(this);
-			Naming.rebind("rmi://127.0.0.1:6000/MasterGame", this.clientGame);
+			Naming.rebind("rmi://127.0.0.1:5000/MasterGame", this.clientGame);
 			new Thread(clientGame).start();
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -73,13 +69,12 @@ public class ClientController {
 		}
 	}
 
-	public void initGame(String address, int port) {
+	public void initGame(String address) {
 		try {
-			LocateRegistry.createRegistry(6500);
-			this.clientGame = new ClientGame(address, port, this);
-			Naming.rebind("rmi://127.0.0.1:6500/ChallengerGame", this.clientGame);
+			this.clientGame = new ClientGame(address, this);
+			Naming.rebind("rmi://"+address+":5000/ChallengerGame", this.clientGame);
 			System.out.println("Registrado o challenger");
-			this.clientGame.getOtherClient().searchEnemy(this.clientGame.getAddress());
+			this.clientGame.getOtherClient().searchEnemy(this.clientGame.getAddress(), "ChallengerGame");
 			new Thread(clientGame).start();
 			alert(Commands.INIT_GAME);
 		} catch (RemoteException e) {
@@ -157,7 +152,7 @@ public class ClientController {
 	}
 
 	public boolean isConnect() {
-		return ((this.clientChat != null) && (this.clientGame != null))?true:false;
+		return ((this.clientChat.getOtherClient() != null) && (this.clientGame.getOtherClient() != null))?true:false;
 	}
 
 	/**

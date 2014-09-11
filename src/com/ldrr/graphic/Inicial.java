@@ -9,13 +9,11 @@ import javax.swing.JButton;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.ldrr.server.custom.ServerGame;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.Color;
-import java.io.IOException;
+import java.rmi.registry.LocateRegistry;
 
 /**
  * All source code and required libraries are found at the following link:
@@ -36,11 +34,6 @@ public class Inicial {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		try {
-			Runtime.getRuntime().exec("rmiregistry");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}  
 		try {
 			UIManager.setLookAndFeel(ch.randelshofer.quaqua.QuaquaManager
 					.getLookAndFeelClassName());
@@ -114,9 +107,7 @@ public class Inicial {
 					@Override
 					public void run() {
 						try {
-
-//							ServerGame game = new ServerGame();
-//							new Thread(game).start();
+							LocateRegistry.createRegistry(5000);
 							new GameFrame(false);
 							frame.setVisible(false);
 						} catch (Exception e) {

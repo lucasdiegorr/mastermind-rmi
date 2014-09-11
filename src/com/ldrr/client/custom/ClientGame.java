@@ -32,19 +32,19 @@ public class ClientGame extends UnicastRemoteObject implements Runnable, ClientG
 		this.setController(controller);
 	}
 
-	public ClientGame(String address, int port, ClientController controller) throws RemoteException {
+	public ClientGame(String address, ClientController controller) throws RemoteException {
 		try {
 			this.setController(controller);
-			setOtherClient((ClientGameInterface)Naming.lookup("rmi://"+address+":6000/MasterGame"));
+			setOtherClient((ClientGameInterface)Naming.lookup("rmi://"+address+":5000/MasterGame"));
 		} catch (MalformedURLException | NotBoundException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	@Override
-	public void searchEnemy(String address) throws RemoteException {
+	public void searchEnemy(String address, String enemy) throws RemoteException {
 		try {
-			setOtherClient((ClientGameInterface)Naming.lookup("rmi://"+address+":6500/ChallengerGame"));
+			setOtherClient((ClientGameInterface)Naming.lookup("rmi://127.0.0.1:5000/"+enemy));
 			getOtherClient().sendAlert(Commands.INIT_GAME);
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			e.printStackTrace();
@@ -94,7 +94,9 @@ public class ClientGame extends UnicastRemoteObject implements Runnable, ClientG
 	@Override
 	public void sendAlert(Commands alert) {
 		try {
-			getOtherClient().receivedAlert(alert);
+			if (getOtherClient() != null) {
+				getOtherClient().receivedAlert(alert);
+			}
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

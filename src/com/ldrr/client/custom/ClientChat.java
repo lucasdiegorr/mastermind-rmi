@@ -41,30 +41,30 @@ public class ClientChat extends UnicastRemoteObject implements Runnable, ClientC
 		this.setEmoticon(0);
 	}
 
-	public ClientChat(String address, int port, ClientController controller, String nickname) throws RemoteException{
+	public ClientChat(String address, ClientController controller, String nickname) throws RemoteException{
 		try {
 			this.setClientName(nickname);
 			this.setController(controller);
 			this.setEmoticon(0);
-			setOtherClient((ClientChatInterface)Naming.lookup("rmi://"+address+":"+port+"/MasterChat"));
+			setOtherClient((ClientChatInterface)Naming.lookup("rmi://"+address+":5000/MasterChat"));
 		} catch (MalformedURLException | NotBoundException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public ClientChat(String address, int port, ClientController controller) throws RemoteException{
+	public ClientChat(String address, ClientController controller) throws RemoteException{
 		try {
 			this.setController(controller);
 			this.setEmoticon(0);
-			setOtherClient((ClientChatInterface)Naming.lookup("rmi://"+address+":"+port+"/MasterChat"));
+			setOtherClient((ClientChatInterface)Naming.lookup("rmi://"+address+":5000/MasterChat"));
 		} catch (MalformedURLException | NotBoundException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void searchEnemy(String address) {
+	public void searchEnemy(String address, String enemy) {
 		try {
-			setOtherClient((ClientChatInterface)Naming.lookup("rmi://"+address+":5500/ChallengerChat"));
+			setOtherClient((ClientChatInterface)Naming.lookup("rmi://"+address+":5000/"+enemy));
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			e.printStackTrace();
 		}

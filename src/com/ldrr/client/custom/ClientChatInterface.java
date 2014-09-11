@@ -41,5 +41,5 @@ public interface ClientChatInterface extends Remote{
 	 */
 	public int getEmoticon() throws RemoteException;
 		
-	public void searchEnemy(String address) throws RemoteException;
+	public void searchEnemy(String address, String enemy) throws RemoteException;
 }
