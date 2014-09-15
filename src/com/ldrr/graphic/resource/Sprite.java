@@ -10,8 +10,8 @@ import javax.swing.ImageIcon;
 
 /**
  * All source code and required libraries are found at the following link:
- * https://github.com/lucasdiegorr/mastermind-socket 
- * branch: beta
+ * https://github.com/lucasdiegorr/mastermind-rmi
+ * branch: master
  */
 
 /**
