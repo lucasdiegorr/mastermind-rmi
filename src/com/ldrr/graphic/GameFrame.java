@@ -1085,11 +1085,7 @@ public class GameFrame {
 			if (colorResponse[i] != Sprite.BLACK) {
 				if (getIndex_move() == 10) {
 					setPassword(password);
-					if ((JOptionPane.showConfirmDialog(null, "Você perdeu. Que pena.\nGostaria de reiniciar o jogo?") == JOptionPane.OK_OPTION)) {
-						getClientController().resetGame();
-						resetGame();
-						return;
-					}
+					JOptionPane.showMessageDialog(null, "Você perdeu. Que pena.\nQuem sabe na próxima.");
 					getClientController().disconnectFromChat();
 					getClientController().disconnectFromGame();
 					System.exit(0);
@@ -1099,12 +1095,8 @@ public class GameFrame {
 		}
 
 		setPassword(password);
-
-		if ((JOptionPane.showConfirmDialog(null, "Você ganhou!!!. PARABÉNS!!!.\nGostaria de reiniciar o jogo?") == JOptionPane.OK_OPTION)) {
-			resetGame();
-			getClientController().resetGame();
-			return;
-		}
+	
+		JOptionPane.showMessageDialog(null, "Você ganhou!!!. PARABÉNS!!!.");
 		getClientController().disconnectFromChat();
 		getClientController().disconnectFromGame();
 		System.exit(0);

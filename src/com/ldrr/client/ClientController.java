@@ -73,7 +73,6 @@ public class ClientController {
 		try {
 			this.clientGame = new ClientGame(address, this);
 			Naming.rebind("rmi://"+address+":5000/ChallengerGame", this.clientGame);
-			System.out.println("Registrado o challenger");
 			this.clientGame.getOtherClient().searchEnemy(this.clientGame.getAddress(), "ChallengerGame");
 			new Thread(clientGame).start();
 			alert(Commands.INIT_GAME);
